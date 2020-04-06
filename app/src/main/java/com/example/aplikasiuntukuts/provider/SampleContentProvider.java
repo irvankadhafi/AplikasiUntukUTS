@@ -47,7 +47,7 @@ import java.util.concurrent.Callable;
 public class SampleContentProvider extends ContentProvider {
 
     /** The authority of this content provider. */
-    public static final String AUTHORITY = "com.example.android.contentprovidersample.provider";
+    public static final String AUTHORITY = "com.example.aplikasiuntukuts.provider";
 
     /** The URI for the Cheese table. */
     public static final Uri URI_CHEESE = Uri.parse(
@@ -93,6 +93,19 @@ public class SampleContentProvider extends ContentProvider {
             return cursor;
         } else {
             throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getType(@NonNull Uri uri) {
+        switch (MATCHER.match(uri)) {
+            case CODE_CHEESE_DIR:
+                return "vnd.android.cursor.dir/" + AUTHORITY + "." + Cheese.TABLE_NAME;
+            case CODE_CHEESE_ITEM:
+                return "vnd.android.cursor.item/" + AUTHORITY + "." + Cheese.TABLE_NAME;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
         }
     }
 

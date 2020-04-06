@@ -25,7 +25,7 @@ import androidx.room.Update;
 import android.database.Cursor;
 
 
-
+@Dao
 public interface CheeseDao {
 
     /**

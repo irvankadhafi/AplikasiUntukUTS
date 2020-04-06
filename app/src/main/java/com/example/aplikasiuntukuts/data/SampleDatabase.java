@@ -27,7 +27,7 @@ import androidx.annotation.VisibleForTesting;
 /**
  * The Room database.
  */
-@Database(entities = {Cheese.class}, version = 1)
+@Database(entities = {Cheese.class}, version = 1, exportSchema = false)
 public abstract class SampleDatabase extends RoomDatabase {
 
     /**
@@ -55,6 +55,7 @@ public abstract class SampleDatabase extends RoomDatabase {
         return sInstance;
     }
 
+
     /**
      * Switches the internal implementation with an empty in-memory database.
      *
@@ -65,6 +66,19 @@ public abstract class SampleDatabase extends RoomDatabase {
         sInstance = Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
                 SampleDatabase.class).build();
     }
-
+    private void populateInitialData() {
+        if (cheese().count() == 0) {
+            runInTransaction(new Runnable() {
+                @Override
+                public void run() {
+                    Cheese cheese = new Cheese();
+                    for (int i = 0; i < Cheese.CHEESES.length; i++) {
+                        cheese.name = Cheese.CHEESES[i];
+                        cheese().insert(cheese);
+                    }
+                }
+            });
+        }
+    }
 
 }

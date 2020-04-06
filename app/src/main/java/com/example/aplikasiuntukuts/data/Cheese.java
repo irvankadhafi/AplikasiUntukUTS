@@ -25,8 +25,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
+import androidx.room.Entity;
+import android.content.ContentValues;
+import android.provider.BaseColumns;
 
-
+@Entity(tableName = Cheese.TABLE_NAME)
 public class Cheese {
 
     /** The name of the Cheese table. */

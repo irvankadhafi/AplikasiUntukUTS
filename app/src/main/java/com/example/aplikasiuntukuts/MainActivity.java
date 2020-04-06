@@ -19,18 +19,22 @@ package com.example.aplikasiuntukuts;
 
 import android.database.Cursor;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.appcompat.app.AppCompatActivity;
+/*
+Menambahkan implementation recylerview pada build.graddle, agar dependencies recyler view terbaca
+ */
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aplikasiuntukuts.data.Cheese;
 import com.example.aplikasiuntukuts.provider.SampleContentProvider;
@@ -49,9 +53,12 @@ public class MainActivity extends AppCompatActivity {
     private CheeseAdapter mCheeseAdapter;
 
     @Override
-    protected void onStart(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_main); //Tadi nama layoutnya salah
+
+        final RecyclerView list = findViewById(R.id.list); //agar list tidak error
+
         list.setLayoutManager(new LinearLayoutManager(list.getContext()));
         mCheeseAdapter = new CheeseAdapter();
         list.setAdapter(mCheeseAdapter);
@@ -94,10 +101,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            if (mCursor.moveToPosition(position)) {
+                holder.mText.setText(mCursor.getString(
+                        mCursor.getColumnIndexOrThrow(Cheese.COLUMN_NAME)));
+            }
+        }
+
+        @Override
         public int getItemCount() {
             return mCursor == null ? 0 : mCursor.getCount();
         }
-
 
         void setCheeses(Cursor cursor) {
             mCursor = cursor;
